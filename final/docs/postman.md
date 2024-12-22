@@ -5,7 +5,7 @@
 * Метод: POST
 * URL: `http://127.0.0.1:8000/api/register/`
 
-Перейдите на вкладку "Headers" и добавьте заголовок:
+Перейдите на вкладку "Headers" и добавить заголовок:
 
 * Key: Content-Type
 * Value: application/json
@@ -41,7 +41,7 @@
 * Key: Content-Type
 * Value: application/json
 
-Перейдите на вкладку "Body", выберите "raw" и "JSON", затем вставьте следующие данные:
+Перейдите на вкладку "Body", выбрать "raw" и "JSON", затем вставьте следующие данные:
 
 ```yaml
 {
