@@ -1,7 +1,0 @@
-Thank you for your order!
-
-{% for order_item in order.ordered_items.all %}
-- {{ order_item.product_info.product.name }} x {{ order_item.quantity }} ({{ order_item.total }})
-{% endfor %}
-
-Total: {{ order.total }}

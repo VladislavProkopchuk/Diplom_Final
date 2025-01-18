@@ -1,0 +1,141 @@
+POST {{API_URL}}/user/register
+Content-Type: application/json
+
+{
+  "email": "{{UserEmail}}",
+  "first_name": "testFirstname",
+  "last_name": "testLastname",
+  "password": "Ucst#ZJk9vsmPDKT8bAP",
+  "company": "testCompany",
+  "position": "testPosition",
+  "username": "shop1",
+  "type": "shop"
+}
+###
+
+POST {{API_URL}}/user/register/confirm
+Content-Type: application/json
+
+{
+  "email": "{{UserEmail}}",
+  "token": "f7c80681220181dbd330350f242eb2499bea98322"
+}
+###
+
+POST {{API_URL}}/user/login
+Content-Type: application/json
+
+{
+  "email": "{{UserEmail}}",
+  "password": "Ucst#ZJk9vsmPDKT8bAP"
+}
+###
+
+GET {{API_URL}}/user/details
+Authorization: Token {{Shop1_Token}}
+###
+
+POST {{API_URL}}/shops
+Content-Type: application/json
+Authorization: Token {{Shop1_Token}}
+
+{
+  "name": "testShop",
+  "url": "http://domain.com",
+  "state": "False"
+}
+###
+
+GET {{API_URL}}/partner/state
+Authorization: Token {{Shop1_Token}}
+###
+
+POST {{API_URL}}/partner/state
+Content-Type: application/json
+Authorization: Token {{Shop1_Token}}
+
+{
+  "state": "True"
+}
+###
+
+POST {{API_URL}}/partner/update
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Token {{Shop1_Token}}
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="shop1.yaml"
+
+< ../../../data/shop1.yaml
+###
+
+POST {{API_URL}}/partner/update
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Token {{Shop2_Token}}
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="shop2.json"
+
+< ../../../data/shop2.json
+###
+
+GET {{API_URL}}/products
+###
+
+GET {{API_URL}}/products?category_id=1
+###
+
+POST {{API_URL}}/basket
+Content-Type: application/json
+Authorization: Token {{Byer1_Token}}
+
+{
+  "items": [
+              {"product_info": 23, "quantity": 1},
+              {"product_info": 26, "quantity": 1},
+              {"product_info": 27, "quantity": 1},
+              {"product_info": 24, "quantity": 1}
+           ]
+}
+###
+
+GET {{API_URL}}/basket
+Authorization: Token {{Byer1_Token}}
+###
+
+POST {{API_URL}}/user/contact
+Content-Type: application/json
+Authorization: Token {{Byer1_Token}}
+
+{
+  "city": "Санкт-Петербург",
+  "street": "Невский проспект",
+  "phone": "+79119009090"
+}
+###
+
+GET{{API_URL}}/user/contact
+Authorization: Token {{Byer1_Token}}
+###
+
+POST {{API_URL}}/order
+Content-Type: application/json
+Authorization: Token {{Byer1_Token}}
+
+{
+  "id": "1",
+  "contact": "1"
+}
+###
+
+GET{{API_URL}}/order
+Authorization: Token {{Byer1_Token}}
+###
+
+GET{{API_URL}}/partner/orders
+Authorization: Token {{Shop1_Token}}
+###
+
+GET{{API_URL}}/partner/orders
+Authorization: Token {{Shop2_Token}}
+###

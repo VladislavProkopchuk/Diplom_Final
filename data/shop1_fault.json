@@ -1,0 +1,23 @@
+{
+  "shop": "Связной",
+  "categories": [
+    {
+      "id": -1,
+      "name": "Looooooooooooooooooooooooooooooooooooooong"
+    }
+  ],
+  "goods": [
+    {
+      "id": -1,
+      "category": -1,
+      "model": "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong",
+      "name": "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong",
+      "price": 10,
+      "price_rrc": 10,
+      "quantity": 10,
+      "parameters": {
+        "Width": 1
+      }
+    }
+  ]
+}

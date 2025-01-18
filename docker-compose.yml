@@ -1,0 +1,110 @@
+version: '3.9'
+
+networks:
+  orders_network:
+
+volumes:
+  postgres_data:
+  static_volume:
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./logs:/var/log
+    environment:
+      - POSTGRES_DB=orders_diplom
+      - POSTGRES_USER=orders_diplom_user
+      - POSTGRES_PASSWORD=orders_diplom_user_password
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orders_diplom_user -d orders_diplom"]
+      start_period: 15s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    container_name: postgres
+    networks:
+      orders_network:
+        aliases:
+          - db-postgres
+
+  redis:
+    image: redis:7.0.0-alpine
+    ports:
+      - "6379:6379"
+    container_name: redis
+    depends_on:
+      - postgres
+    networks:
+      orders_network:
+        aliases:
+          - db-redis
+
+  web:
+    build:
+      context: .
+      dockerfile: ./orders/orders.Dockerfile
+    command: gunicorn orders.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/usr/src/static/
+      - ./orders:/usr/src/
+      - ./logs:/var/log
+    expose:
+      - 8000
+    env_file:
+      - ./orders/.env
+    environment:
+      - DB_HOST=db-postgres
+      - DB_PORT=5432
+      - DB_NAME=orders_diplom
+      - DB_USER=orders_diplom_user
+      - DB_PASSWORD=orders_diplom_user_password
+      - DEBUG=False
+      - CELERY_REDIS_DB_HOST=db-redis
+      - CELERY_REDIS_DB_PORT=6379
+      - CELERY_REDIS_BACKEND=2
+      - CELERY_REDIS_BROKER=4
+    container_name: app
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      orders_network:
+        aliases:
+          - web-app
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    ports:
+      - "1337:80"
+    container_name: nginx
+    depends_on:
+      - web
+    networks:
+      orders_network:
+        aliases:
+          - web-nginx
+
+  celery:
+    build:
+      context: .
+      dockerfile: ./orders/celery.Dockerfile
+    environment:
+      - DEBUG=False
+      - CELERY_REDIS_DB_HOST=db-redis
+      - CELERY_REDIS_DB_PORT=6379
+      - CELERY_REDIS_BACKEND=2
+      - CELERY_REDIS_BROKER=4
+    container_name: celery_app
+    networks:
+      orders_network:
+    volumes:
+      - ./orders:/usr/src/
+      - ./logs:/var/log
